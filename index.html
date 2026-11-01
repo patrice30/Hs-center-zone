@@ -3,117 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portail Wi-Fi - HS Center</title>
+    <title>HS Center - Portail Wi-Fi</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-        }
-        h2 { color: #333; margin-bottom: 10px; }
-        p { color: #666; font-size: 14px; margin-bottom: 20px; }
-        .tariff-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #fafafa;
-            text-align: left;
-        }
-        .tariff-card h3 { margin: 0 0 5px 0; color: #007bff; font-size: 18px; }
-        .tariff-card span { font-weight: bold; color: #333; }
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-        button:hover { background-color: #218838; }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; text-align: center; padding: 20px; }
+        .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0,0,0,0.1); }
+        .logo { max-width: 120px; height: auto; margin-bottom: 15px; }
+        .btn { display: flex; align-items: center; justify-content: space-between; width: 100%; background: #007bff; color: white; border: none; padding: 12px 15px; margin: 10px 0; border-radius: 5px; font-size: 16px; cursor: pointer; text-decoration: none; }
+        .btn:hover { background: #0056b3; }
+        .operators { display: flex; gap: 5px; align-items: center; }
+        .operators img { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <!-- Logo de HS Center -->
+    <img src="logo.png" alt="HS Center Logo" class="logo">
+    
     <h2>HS Center Wi-Fi</h2>
     <p>Choisissez votre forfait pour vous connecter :</p>
 
-    <div class="tariff-card">
-        <h3>Pass 24h</h3>
-        <p>Accès illimité pendant 24h.<br><span>Prix : 200 FCFA</span></p>
-        <button onclick="payer('200', 'Pass 24h')">Acheter via Moneroo</button>
-    </div>
+    <!-- Boutons de paiement avec les logos des 4 opérateurs -->
+    <button class="btn" onclick="payer('200')">
+        <span>Pass 24h (200 FCFA)</span>
+        <div class="operators">
+            <img src="orange.png" alt="Orange">
+            <img src="mtn.png" alt="MTN">
+            <img src="moov.png" alt="Moov">
+            <img src="wave.png" alt="Wave">
+        </div>
+    </button>
 
-    <div class="tariff-card">
-        <h3>Pass 1 Semaine</h3>
-        <p>Idéal pour un usage régulier.<br><span>Prix : 500 FCFA</span></p>
-        <button onclick="payer('500', 'Pass 1 Semaine')">Acheter via Moneroo</button>
-    </div>
+    <button class="btn" onclick="payer('500')">
+        <span>Pass 1 Semaine (500 FCFA)</span>
+        <div class="operators">
+            <img src="orange.png" alt="Orange">
+            <img src="mtn.png" alt="MTN">
+            <img src="moov.png" alt="Moov">
+            <img src="wave.png" alt="Wave">
+        </div>
+    </button>
 
-    <div class="tariff-card">
-        <h3>Pass 10 Jours</h3>
-        <p>Connexion prolongée.<br><span>Prix : 1000 FCFA</span></p>
-        <button onclick="payer('1000', 'Pass 10 Jours')">Acheter via Moneroo</button>
-    </div>
+    <button class="btn" onclick="payer('1000')">
+        <span>Pass 10 Jours (1000 FCFA)</span>
+        <div class="operators">
+            <img src="orange.png" alt="Orange">
+            <img src="mtn.png" alt="MTN">
+            <img src="moov.png" alt="Moov">
+            <img src="wave.png" alt="Wave">
+        </div>
+    </button>
 
-    <div class="tariff-card">
-        <h3>Pass Mensuel Mobile</h3>
-        <p>Réservé aux smartphones (1 mois).<br><span>Prix : 3000 FCFA</span></p>
-        <button onclick="payer('3000', 'Pass Mensuel Mobile')">Acheter via Moneroo</button>
-    </div>
+    <button class="btn" onclick="payer('3000')">
+        <span>Pass Mensuel Mobile (3000 FCFA)</span>
+        <div class="operators">
+            <img src="orange.png" alt="Orange">
+            <img src="mtn.png" alt="MTN">
+            <img src="moov.png" alt="Moov">
+            <img src="wave.png" alt="Wave">
+        </div>
+    </button>
 
-    <div class="tariff-card">
-        <h3>Pass Mensuel PC / TV</h3>
-        <p>Haut débit illimité (1 mois).<br><span>Prix : 5000 FCFA</span></p>
-        <button onclick="payer('5000', 'Pass Mensuel PC/TV')">Acheter via Moneroo</button>
-    </div>
-
-    <hr style="margin: 20px 0;">
-
-    <div style="text-align: left;">
-        <label for="code">Vous avez déjà un ticket ?</label>
-        <input type="text" id="code" placeholder="Entrez votre code d'accès">
-        <button style="background-color: #007bff;" onclick="validerCode()">Se connecter</button>
-    </div>
+    <button class="btn" onclick="payer('5000')">
+        <span>Pass Mensuel PC/TV (5000 FCFA)</span>
+        <div class="operators">
+            <img src="orange.png" alt="Orange">
+            <img src="mtn.png" alt="MTN">
+            <img src="moov.png" alt="Moov">
+            <img src="wave.png" alt="Wave">
+        </div>
+    </button>
 </div>
 
 <script>
-    function payer(montant, forfait) {
-        alert("Redirection vers le paiement Moneroo pour le " + forfait + " (" + montant + " FCFA)...");
-    }
+    function payer(montant) {
+        var liensMoneroo = {
+            '200': 'https://link.moneroo.io/p/VOTRE_LIEN_200',
+            '500': 'https://link.moneroo.io/p/VOTRE_LIEN_500',
+            '1000': 'https://link.moneroo.io/p/VOTRE_LIEN_1000',
+            '3000': 'https://link.moneroo.io/p/VOTRE_LIEN_3000',
+            '5000': 'https://link.moneroo.io/p/VOTRE_LIEN_5000'
+        };
 
-    function validerCode() {
-        var code = document.getElementById('code').value;
-        if(code.trim() === "") {
-            alert("Veuillez entrer un code valide.");
+        if (liensMoneroo[montant]) {
+            window.location.href = liensMoneroo[montant];
         } else {
-            alert("Validation du code : " + code);
+            alert("Erreur de redirection vers le paiement.");
         }
     }
 </script>
