@@ -62,11 +62,11 @@
 
 <div class="container">
     <h2>HS Center Wi-Fi</h2>
-    <p>Choisissez votre forfait pour vous connecter à Internet :</p>
+    <p>Choisissez votre forfait pour vous connecter :</p>
 
     <div class="tariff-card">
         <h3>Pass 24h</h3>
-        <p>Accès illimité pendant 24 heures.<br><span>Prix : 200 FCFA</span></p>
+        <p>Accès illimité pendant 24h.<br><span>Prix : 200 FCFA</span></p>
         <button onclick="payer('200', 'Pass 24h')">Acheter via Moneroo</button>
     </div>
 
@@ -90,7 +90,7 @@
 
     <div class="tariff-card">
         <h3>Pass Mensuel PC / TV</h3>
-        <p>Haut débit illimité pour ordinateurs et téléviseurs.<br><span>Prix : 5000 FCFA</span></p>
+        <p>Haut débit illimité (1 mois).<br><span>Prix : 5000 FCFA</span></p>
         <button onclick="payer('5000', 'Pass Mensuel PC/TV')">Acheter via Moneroo</button>
     </div>
 
@@ -106,7 +106,6 @@
 <script>
     function payer(montant, forfait) {
         alert("Redirection vers le paiement Moneroo pour le " + forfait + " (" + montant + " FCFA)...");
-        // Ici, vous intégrerez l'appel de l'API de paiement Moneroo
     }
 
     function validerCode() {
@@ -115,7 +114,6 @@
             alert("Veuillez entrer un code valide.");
         } else {
             alert("Validation du code : " + code);
-            // Ici, la logique de validation MikroTik / Supabase
         }
     }
 </script>
