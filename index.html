@@ -1,20 +1,17 @@
-{
-  "name": "HS Center Super App",
-  "short_name": "HS Center",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#10b981",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
+<script>
+    function payer(montant) {
+        var liensMoneroo = {
+            '200': 'https://pay.moneroo.io/votre-lien-200',   // Mettez le vrai lien pour 200 FCFA ici
+            '500': 'https://pay.moneroo.io/votre-lien-500',   // Mettez le vrai lien pour 500 FCFA ici
+            '1000': 'https://pay.moneroo.io/votre-lien-1000', // Mettez le vrai lien pour 1000 FCFA ici
+            '3000': 'https://pay.moneroo.io/votre-lien-3000', // Mettez le vrai lien pour 3000 FCFA ici
+            '5000': 'https://pay.moneroo.io/votre-lien-5000'  // Mettez le vrai lien pour 5000 FCFA ici
+        };
+
+        if (liensMoneroo[montant]) {
+            window.location.href = liensMoneroo[montant];
+        } else {
+            alert("Erreur de redirection vers le paiement.");
+        }
     }
-  ]
-}
+</script>
