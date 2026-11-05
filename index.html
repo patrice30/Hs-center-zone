@@ -1,1 +1,27 @@
-Erreur de syntaxe : SyntaxError: Unexpected token '<' (ligne : 1, fichier : Code.gs)
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var action = data.action;
+    var sheetName = "";
+    
+    if (action === "vente") {
+      sheetName = "Caisse_et_Ventes";
+    } else if (action === "reception") {
+      sheetName = "Receptions_Stock";
+    } else {
+      return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": "Action inconnue"}))
+                          .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+    var rowData = data.row;
+    sheet.appendRow(rowData);
+    
+    return ContentService.createTextOutput(JSON.stringify({"status": "success", "message": "Enregistré avec succès"}))
+                        .setMimeType(ContentService.MimeType.JSON);
+                        
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({"status": "error", "message": error.toString()}))
+                        .setMimeType(ContentService.MimeType.JSON);
+  }
+}
