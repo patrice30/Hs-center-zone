@@ -1,69 +1,33 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>HS Center - Gestion</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 20px; }
-        .container { max-width: 500px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #333; text-align: center; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-        button { width: 100%; background: #28a745; color: white; padding: 10px; border: none; border-radius: 4px; margin-top: 20px; cursor: pointer; font-size: 16px; }
-        button:hover { background: #218838; }
-        #message { margin-top: 15px; text-align: center; font-weight: bold; }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h2>HS Center - Gestion</h2>
-    <form id="hsForm">
-        <label for="action">Type d'opération :</label>
-        <select id="action" name="action">
-            <option value="vente">Vente</option>
-            <option value="reception">Réception de Stock</option>
-        </select>
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    // Choisit l'onglet en fonction du type d'opération choisi sur le formulaire
+    var sheetName = "Caisse_et_Ventes"; // Onglet par défaut
+    if (data.action === 'reception') {
+      sheetName = "Receptions_Stock";
+    }
+    
+    var sheet = ss.getSheetByName(sheetName);
+    
+    // Si l'onglet n'existe pas encore, il prend le premier onglet par défaut
+    if (!sheet) {
+      sheet = ss.getSheets()[0];
+    }
+    
+    // Ajoute la ligne dans le bon onglet
+    sheet.appendRow(data.row);
+    
+    return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
+           .setMimeType(ContentService.MimeType.JSON);
+           
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
+           .setMimeType(ContentService.MimeType.JSON);
+  }
+}
 
-        <label for="details">Détails (Article, Quantité, Montant) :</label>
-        <input type="text" id="details" name="details" placeholder="Ex: iPhone 15 Pro, 1, 650000" required>
-
-        <button type="submit" id="submitBtn">Enregistrer</button>
-    </form>
-    <div id="message"></div>
-</div>
-
-<script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz0KazjTG6OuwUicZYQLtzgl_nr48dSzsYZOJnfXvTL8xJjtMkVo1purRuauhpiZR5Q/exec";
-
-    document.getElementById("hsForm").addEventListener("submit", function(e) {
-        e.preventDefault();
-        const btn = document.getElementById("submitBtn");
-        const msg = document.getElementById("message");
-        btn.disabled = true;
-        msg.style.color = "blue";
-        msg.textContent = "Enregistrement en cours...";
-
-        const action = document.getElementById("action").value;
-        const details = document.getElementById("details").value;
-        
-        const rowData = [new Date().toLocaleString(), action, details];
-
-        fetch(WEB_APP_URL, {
-            method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: action, row: rowData })
-        }).then(() => {
-            msg.style.color = "green";
-            msg.textContent = "Enregistré avec succès !";
-            document.getElementById("hsForm").reset();
-            btn.disabled = false;
-        }).catch(error => {
-            msg.style.color = "red";
-            msg.textContent = "Erreur : " + error;
-            btn.disabled = false;
-        });
-    });
-</script>
-</body>
-</html>
+function doGet(e) {
+  return ContentService.createTextOutput("HS Center - Gestion multi-onglets active !");
+}
