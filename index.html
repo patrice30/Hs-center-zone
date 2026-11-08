@@ -2,32 +2,21 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName("TONTINE") || ss.getSheets()[0];
     
-    // Choisit l'onglet en fonction du type d'opération choisi sur le formulaire
-    var sheetName = "Caisse_et_Ventes"; // Onglet par défaut
-    if (data.action === 'reception') {
-      sheetName = "Receptions_Stock";
-    }
-    
-    var sheet = ss.getSheetByName(sheetName);
-    
-    // Si l'onglet n'existe pas encore, il prend le premier onglet par défaut
-    if (!sheet) {
-      sheet = ss.getSheets()[0];
-    }
-    
-    // Ajoute la ligne dans le bon onglet
-    sheet.appendRow(data.row);
+    // Ajoute la date, le nom, le montant, la preuve et le statut "En attente"
+    sheet.appendRow([
+      new Date().toLocaleString(),
+      data.membre,
+      data.montant,
+      data.preuve,
+      "Validé"
+    ]);
     
     return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
            .setMimeType(ContentService.MimeType.JSON);
-           
   } catch (error) {
     return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
            .setMimeType(ContentService.MimeType.JSON);
   }
-}
-
-function doGet(e) {
-  return ContentService.createTextOutput("HS Center - Gestion multi-onglets active !");
 }
