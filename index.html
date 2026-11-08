@@ -1,22 +1,75 @@
-function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet = ss.getSheetByName("TONTINE") || ss.getSheets()[0];
-    
-    // Ajoute la date, le nom, le montant, la preuve et le statut "En attente"
-    sheet.appendRow([
-      new Date().toLocaleString(),
-      data.membre,
-      data.montant,
-      data.preuve,
-      "Validé"
-    ]);
-    
-    return ContentService.createTextOutput(JSON.stringify({ "status": "success" }))
-           .setMimeType(ContentService.MimeType.JSON);
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({ "status": "error", "message": error.toString() }))
-           .setMimeType(ContentService.MimeType.JSON);
-  }
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tontine HS Center</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #eef2f5; margin: 0; padding: 15px; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); max-width: 450px; margin: auto; }
+        h2 { text-align: center; color: #1e293b; margin-top: 0; }
+        label { font-weight: bold; font-size: 14px; color: #475569; display: block; margin-top: 12px; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
+        button { width: 100%; background: #059669; color: white; padding: 12px; border: none; border-radius: 6px; margin-top: 20px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        button:hover { background: #047857; }
+        #statusMsg { text-align: center; font-weight: bold; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Tontine Circulaire HS</h2>
+    <form id="tontineForm">
+        <label for="membre">Nom du Membre :</label>
+        <input type="text" id="membre" placeholder="Votre nom complet" required>
+
+        <label for="montant">Montant déposé (FCFA) :</label>
+        <input type="number" id="montant" placeholder="Ex: 10000" required>
+
+        <label for="preuve">Référence / Reçu Mobile Money :</label>
+        <input type="text" id="preuve" placeholder="Ex: Réf Orange/MTN/Moov ou Lien de la capture" required>
+
+        <button type="submit" id="btnSubmit">Envoyer la preuve de dépôt</button>
+    </form>
+    <div id="statusMsg"></div>
+</div>
+
+<script>
+    // Remplacez par votre URL de déploiement Web App Apps Script
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0KazjTG6OuwUicZYQLtzgl_nr48dSzsYZOJnfXvTL8xJjtMkVo1purRuauhpiZR5Q/exec";
+
+    document.getElementById("tontineForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const btn = document.getElementById("btnSubmit");
+        const msg = document.getElementById("statusMsg");
+
+        btn.disabled = true;
+        msg.style.color = "#0284c7";
+        msg.textContent = "Transmissions du dépôt en cours...";
+
+        const payload = {
+            membre: document.getElementById("membre").value,
+            montant: document.getElementById("montant").value,
+            preuve: document.getElementById("preuve").value
+        };
+
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            msg.style.color = "#16a34a";
+            msg.textContent = "Dépôt enregistré avec succès !";
+            document.getElementById("tontineForm").reset();
+            btn.disabled = false;
+        }).catch(err => {
+            msg.style.color = "#dc2626";
+            msg.textContent = "Erreur lors de l'envoi : " + err;
+            btn.disabled = false;
+        });
+    });
+</script>
+
+</body>
+</html>
