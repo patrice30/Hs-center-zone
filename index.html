@@ -1,57 +1,224 @@
-function doGet() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetM = ss.getSheetByName("MEMBRES");
-  var sheetD = ss.getSheetByName("DEPOTS");
-  
-  var membres = [];
-  if (sheetM && sheetM.getLastRow() > 1) {
-    var dataM = sheetM.getRange(2, 1, sheetM.getLastRow() - 1, 4).getValues();
-    membres = dataM.map(function(row) {
-      return { id: row[0], nom: row[1], tel: row[2], servi: row[3] === true || row[3] === "true" };
-    });
-  }
-  
-  var depots = [];
-  if (sheetD && sheetD.getLastRow() > 1) {
-    var dataD = sheetD.getRange(2, 1, sheetD.getLastRow() - 1, 5).getValues();
-    depots = dataD.map(function(row) {
-      return { date: row[0], nom: row[1], montant: row[2], operateur: row[3], ref: row[4] };
-    });
-  }
-  
-  var output = JSON.stringify({ membres: membres, depots: depots });
-  return ContentService.createTextOutput(output).setMimeType(ContentService.MimeType.JSON);
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tontine HS Center</title>
+    <style>
+        body { font-family: system-ui, sans-serif; background: #f8fafc; margin: 0; padding: 0; color: #1e293b; }
+        header { background: #059669; color: white; padding: 15px; text-align: center; }
+        .nav { display: flex; background: white; border-bottom: 1px solid #cbd5e1; position: sticky; top: 0; z-index: 10; }
+        .nav button { flex: 1; padding: 12px 5px; border: none; background: white; font-weight: bold; font-size: 13px; color: #64748b; cursor: pointer; }
+        .nav button.active { color: #059669; border-bottom: 3px solid #059669; background: #f0fdf4; }
+        .container { max-width: 500px; margin: 15px auto; padding: 10px; }
+        .panel { display: none; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .panel.active { display: block; }
+        label { display: block; font-size: 13px; font-weight: bold; margin-top: 10px; color: #475569; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        button.action { width: 100%; background: #059669; color: white; padding: 12px; border: none; border-radius: 6px; margin-top: 15px; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .btn-supp { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+        #loader { text-align: center; font-size: 12px; color: #0284c7; margin-bottom: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
 
-function doPost(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var data = JSON.parse(e.postData.contents);
-  
-  if (data.action === "addMembre") {
-    var sheetM = ss.getSheetByName("MEMBRES");
-    sheetM.appendRow([data.id, data.nom, data.tel, false]);
-  } else if (data.action === "addDepot") {
-    var sheetD = ss.getSheetByName("DEPOTS");
-    sheetD.appendRow([data.date, data.nom, data.montant, data.operateur, data.ref]);
-  } else if (data.action === "updateServi") {
-    var sheetM = ss.getSheetByName("MEMBRES");
-    var values = sheetM.getRange(2, 1, sheetM.getLastRow() - 1, 1).getValues();
-    for (var i = 0; i < values.length; i++) {
-      if (values[i][0] == data.id) {
-        sheetM.getRange(i + 2, 4).setValue(true);
-        break;
-      }
+<header>
+    <h2>Tontine HS Center</h2>
+</header>
+
+<div class="nav">
+    <button onclick="ouvrirOnglet('depot', this)" class="active">Dépôts</button>
+    <button onclick="ouvrirOnglet('historique', this)">Historique</button>
+    <button onclick="ouvrirOnglet('tirage', this)">Tirage</button>
+    <button onclick="ouvrirOnglet('membres', this)">Membres</button>
+</div>
+
+<div class="container">
+    <div id="loader">Chargement...</div>
+
+    <!-- PANEL DEPOT -->
+    <div id="depot" class="panel active">
+        <h3>Faire un versement</h3>
+        <form id="formDepot">
+            <label>Membre :</label>
+            <select id="selMembre" required>
+                <option value="">-- Choisir --</option>
+            </select>
+
+            <label>Montant (FCFA) :</label>
+            <input type="number" id="montant" placeholder="Ex: 10000" required>
+
+            <label>Opérateur Mobile Money :</label>
+            <select id="operateur">
+                <option value="Wave">Wave</option>
+                <option value="Orange">Orange</option>
+                <option value="MTN">MTN</option>
+                <option value="Moov">Moov</option>
+            </select>
+
+            <label>Référence / Preuve :</label>
+            <input type="text" id="ref" placeholder="Réf de transaction" required>
+
+            <button type="submit" class="action">Valider le dépôt</button>
+        </form>
+    </div>
+
+    <!-- PANEL HISTORIQUE -->
+    <div id="historique" class="panel">
+        <h3>Historique des Dépôts</h3>
+        <div id="listeHistorique">Aucun dépôt.</div>
+    </div>
+
+    <!-- PANEL TIRAGE -->
+    <div id="tirage" class="panel" style="text-align: center;">
+        <h3>Tirage au Sort</h3>
+        <div id="gagnantDisplay" style="font-size: 22px; font-weight: bold; color: #0284c7; margin: 20px 0;">???</div>
+        <button onclick="lancerTirage()" class="action" style="background: #0284c7;">Lancer le Tirage</button>
+    </div>
+
+    <!-- PANEL MEMBRES -->
+    <div id="membres" class="panel">
+        <h3>Ajouter un Membre</h3>
+        <form id="formMembre">
+            <label>Nom :</label>
+            <input type="text" id="nomMembre" placeholder="Nom complet" required>
+            <label>Téléphone :</label>
+            <input type="text" id="telMembre" placeholder="Numéro" required>
+            <button type="submit" class="action">Ajouter</button>
+        </form>
+        <h3 style="margin-top: 20px;">Liste des Membres</h3>
+        <div id="listeMembres">Aucun membre.</div>
+    </div>
+</div>
+
+<script>
+    // Mettez votre URL Apps Script exacte ici :
+    const API_URL = "VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI";
+
+    let membres = [];
+    let depots = [];
+
+    function ouvrirOnglet(nomOnglet, elm) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(nomOnglet).classList.add('active');
+        if(elm) elm.classList.add('active');
     }
-  } else if (data.action === "deleteMembre") {
-    var sheetM = ss.getSheetByName("MEMBRES");
-    var values = sheetM.getRange(2, 1, sheetM.getLastRow() - 1, 1).getValues();
-    for (var i = 0; i < values.length; i++) {
-      if (values[i][0] == data.id) {
-        sheetM.deleteRow(i + 2);
-        break;
-      }
+
+    function chargerDonnees() {
+        if(API_URL.includes("VOTRE_URL")) {
+            document.getElementById('loader').innerText = "Veuillez configurer l'URL Apps Script dans le code.";
+            return;
+        }
+
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => {
+                membres = data.membres || [];
+                depots = data.depots || [];
+                rafraichir();
+                document.getElementById('loader').style.display = 'none';
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('loader').innerText = "Mode local actif (Vérifiez le déploiement Sheets)";
+            });
     }
-  }
-  
-  return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
-}
+
+    function rafraichir() {
+        let sel = document.getElementById('selMembre');
+        sel.innerHTML = '<option value="">-- Choisir --</option>';
+        membres.forEach(m => {
+            sel.innerHTML += `<option value="${m.nom}">${m.nom}</option>`;
+        });
+
+        let divM = document.getElementById('listeMembres');
+        divM.innerHTML = membres.length === 0 ? 'Aucun membre.' : '';
+        membres.forEach(m => {
+            divM.innerHTML += `<div class="item"><span><b>${m.nom}</b> (${m.tel}) - ${m.servi ? 'Servi' : 'En attente'}</span> <button class="btn-supp" onclick="supprimer(${m.id})">Supprimer</button></div>`;
+        });
+
+        let divH = document.getElementById('listeHistorique');
+        divH.innerHTML = depots.length === 0 ? 'Aucun dépôt.' : '';
+        depots.forEach(d => {
+            divH.innerHTML += `<div class="item"><span><b>${d.nom}</b><br><small>${d.date} - ${d.ref}</small></span> <span><b>${d.montant} FCFA</b><br>(${d.operateur})</span></div>`;
+        });
+    }
+
+    window.supprimer = function(id) {
+        if(confirm("Supprimer ce membre ?")) {
+            fetch(API_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "deleteMembre", id: id })
+            }).then(() => setTimeout(chargerDonnees, 1200));
+        }
+    }
+
+    document.getElementById('formMembre').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const payload = {
+            action: "addMembre",
+            id: Date.now(),
+            nom: document.getElementById('nomMembre').value,
+            tel: document.getElementById('telMembre').value
+        };
+        fetch(API_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            this.reset();
+            alert("Membre ajouté !");
+            setTimeout(chargerDonnees, 1200);
+        });
+    });
+
+    document.getElementById('formDepot').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const payload = {
+            action: "addDepot",
+            nom: document.getElementById('selMembre').value,
+            montant: document.getElementById('montant').value,
+            operateur: document.getElementById('operateur').value,
+            ref: document.getElementById('ref').value,
+            date: new Date().toLocaleDateString()
+        };
+        fetch(API_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            this.reset();
+            alert("Dépôt enregistré !");
+            setTimeout(chargerDonnees, 1200);
+        });
+    });
+
+    function lancerTirage() {
+        let eligibles = membres.filter(m => !m.servi);
+        if(eligibles.length === 0) {
+            alert("Tous les membres ont déjà été servis !");
+            return;
+        }
+        let gagnant = eligibles[Math.floor(Math.random() * eligibles.length)];
+        document.getElementById('gagnantDisplay').innerText = "🎉 " + gagnant.nom + " 🎉";
+
+        fetch(API_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "updateServi", id: gagnant.id })
+        }).then(() => setTimeout(chargerDonnees, 1200));
+    }
+
+    chargerDonnees();
+</script>
+
+</body>
+</html>
