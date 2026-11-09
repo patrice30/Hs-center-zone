@@ -20,7 +20,7 @@
             --danger-color: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
 
         body {
             background-color: var(--bg-color);
@@ -31,39 +31,39 @@
         header {
             background: linear-gradient(135deg, var(--primary), #0284c7);
             color: white;
-            padding: 20px 15px;
+            padding: 18px 15px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        header h1 { font-size: 22px; font-weight: 700; }
-        header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+        header h1 { font-size: 20px; font-weight: 700; }
+        header p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
 
         .nav-tabs {
             display: flex;
             background: white;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 2px solid #e2e8f0;
             position: sticky;
             top: 0;
-            z-index: 10;
+            z-index: 100;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px 5px;
+            padding: 14px 2px;
             border: none;
-            background: none;
+            background: #ffffff;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-muted);
             cursor: pointer;
             border-bottom: 3px solid transparent;
-            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .tab-btn.active {
             color: var(--primary);
             border-bottom-color: var(--primary);
+            background: #f0fdf4;
         }
 
         .container {
@@ -73,42 +73,34 @@
         }
 
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content.active { display: block !important; }
 
         .card {
             background: var(--card-bg);
             border-radius: 12px;
-            padding: 18px;
+            padding: 16px;
             margin-bottom: 15px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
         }
 
         .card-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             margin-bottom: 12px;
             color: var(--secondary);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
         .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+        label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
 
         input, select {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
             font-size: 14px;
-            outline: none;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+            background: white;
         }
 
         .btn {
@@ -117,43 +109,35 @@
             border: none;
             border-radius: 8px;
             font-weight: 700;
-            font-size: 15px;
+            font-size: 14px;
             cursor: pointer;
-            transition: background 0.2s;
         }
 
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
         .btn-secondary { background: #0284c7; color: white; }
         
         .btn-delete {
             background: #fee2e2;
             color: var(--danger-color);
             border: 1px solid #fca5a5;
-            padding: 4px 8px;
+            padding: 6px 10px;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            margin-left: 8px;
-        }
-
-        .btn-delete:hover {
-            background: var(--danger-color);
-            color: white;
         }
 
         .operator-group {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 6px;
             margin-top: 5px;
         }
 
         .op-btn {
-            padding: 8px 4px;
+            padding: 8px 2px;
             border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            border-radius: 6px;
             text-align: center;
             font-size: 12px;
             font-weight: 700;
@@ -161,10 +145,10 @@
             background: #f8fafc;
         }
 
-        .op-btn.selected[data-op="Wave"] { background: var(--wave-color); color: white; border-color: var(--wave-color); }
-        .op-btn.selected[data-op="Orange"] { background: var(--orange-color); color: white; border-color: var(--orange-color); }
-        .op-btn.selected[data-op="MTN"] { background: var(--mtn-color); color: black; border-color: var(--mtn-color); }
-        .op-btn.selected[data-op="Moov"] { background: var(--moov-color); color: white; border-color: var(--moov-color); }
+        .op-btn.selected[data-op="Wave"] { background: var(--wave-color); color: white; }
+        .op-btn.selected[data-op="Orange"] { background: var(--orange-color); color: white; }
+        .op-btn.selected[data-op="MTN"] { background: var(--mtn-color); color: black; }
+        .op-btn.selected[data-op="Moov"] { background: var(--moov-color); color: white; }
 
         .list-item {
             display: flex;
@@ -174,8 +158,6 @@
             border-bottom: 1px solid #f1f5f9;
         }
 
-        .list-item:last-child { border-bottom: none; }
-
         .badge {
             padding: 3px 8px;
             border-radius: 12px;
@@ -184,7 +166,7 @@
             color: white;
         }
 
-        .badge-wave { background: var(--wave-color); color: white; }
+        .badge-wave { background: var(--wave-color); }
         .badge-orange { background: var(--orange-color); }
         .badge-mtn { background: var(--mtn-color); color: black; }
         .badge-moov { background: var(--moov-color); }
@@ -193,7 +175,7 @@
 
         .wheel-box {
             text-align: center;
-            padding: 25px 10px;
+            padding: 20px 10px;
             background: #1e293b;
             color: white;
             border-radius: 12px;
@@ -201,18 +183,11 @@
         }
 
         .winner-display {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             color: #38bdf8;
-            margin: 15px 0;
-            min-height: 35px;
-        }
-
-        .status-msg {
-            text-align: center;
-            font-size: 13px;
-            margin-top: 10px;
-            font-weight: 600;
+            margin: 12px 0;
+            min-height: 30px;
         }
     </style>
 </head>
@@ -224,15 +199,15 @@
 </header>
 
 <nav class="nav-tabs">
-    <button class="tab-btn active" onclick="switchTab('depot')">Dépôts</button>
-    <button class="tab-btn" onclick="switchTab('historique')">Historique</button>
-    <button class="tab-btn" onclick="switchTab('tirage')">Tirage au Sort</button>
-    <button class="tab-btn" onclick="switchTab('membres')">Membres</button>
+    <button class="tab-btn active" data-tab="depot">Dépôts</button>
+    <button class="tab-btn" data-tab="historique">Historique</button>
+    <button class="tab-btn" data-tab="tirage">Tirage</button>
+    <button class="tab-btn" data-tab="membres">Membres</button>
 </nav>
 
 <div class="container">
 
-    <!-- ONGLET 1: DEPOTS -->
+    <!-- TAB DEPOTS -->
     <div id="tab-depot" class="tab-content active">
         <div class="card">
             <div class="card-title">Enregistrer un versement</div>
@@ -252,16 +227,129 @@
                 <div class="form-group">
                     <label>Mode de Paiement (Mobile Money)</label>
                     <div class="operator-group">
-                        <div class="op-btn selected" data-op="Wave" onclick="selectOp(this)">Wave</div>
-                        <div class="op-btn" data-op="Orange" onclick="selectOp(this)">Orange</div>
-                        <div class="op-btn" data-op="MTN" onclick="selectOp(this)">MTN</div>
-                        <div class="op-btn" data-op="Moov" onclick="selectOp(this)">Moov</div>
+                        <div class="op-btn selected" data-op="Wave">Wave</div>
+                        <div class="op-btn" data-op="Orange">Orange</div>
+                        <div class="op-btn" data-op="MTN">MTN</div>
+                        <div class="op-btn" data-op="Moov">Moov</div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Réf. Transaction / Preuve</label>
-                    <input type="text" id="depotRef" placeholder="Ex: TxID #987654 ou Capture" required>
+                    <input type="text" id="depotRef" placeholder="Ex: Réf Wave/OM/MTN/Moov" required>
                 </div>
 
-                <button type="submit" class="btn btn
+                <button type="submit" class="btn btn-primary">Valider le versement</button>
+            </form>
+            <div id="msgDepot" style="text-align:center; font-size:13px; margin-top:10px; font-weight:bold;"></div>
+        </div>
+    </div>
+
+    <!-- TAB HISTORIQUE -->
+    <div id="tab-historique" class="tab-content">
+        <div class="card">
+            <div class="card-title">Derniers Dépôts enregistrés</div>
+            <div id="listeHistorique"></div>
+        </div>
+    </div>
+
+    <!-- TAB TIRAGE -->
+    <div id="tab-tirage" class="tab-content">
+        <div class="wheel-box">
+            <p style="font-size: 13px; opacity: 0.8;">Bénéficiaire du prochain tour :</p>
+            <div id="winnerDisplay" class="winner-display">???</div>
+            <button class="btn btn-secondary" id="btnTirage">Lancer le Tirage au Sort</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Participants Éligibles</div>
+            <div id="listeEligibles"></div>
+        </div>
+    </div>
+
+    <!-- TAB MEMBRES -->
+    <div id="tab-membres" class="tab-content">
+        <div class="card">
+            <div class="card-title">Ajouter un Participant</div>
+            <form id="formMembre">
+                <div class="form-group">
+                    <label>Nom complet</label>
+                    <input type="text" id="membreNom" placeholder="Ex: Patrice K." required>
+                </div>
+                <div class="form-group">
+                    <label>Numéro Téléphone</label>
+                    <input type="tel" id="membreTel" placeholder="Ex: 0700000000" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Enregistrer le Membre</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Liste des Membres</div>
+            <div id="listeMembres"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let membres = JSON.parse(localStorage.getItem('tontine_membres')) || [
+            { id: 1, nom: "Komenan Patrice", tel: "07080000", servi: false },
+            { id: 2, nom: "Koné Mariam", tel: "05050000", servi: false }
+        ];
+
+        let historiquedepots = JSON.parse(localStorage.getItem('tontine_depots')) || [];
+        let selectedOperator = "Wave";
+
+        // GESTION DES ONGLETS (Résout le problème de blocage)
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+
+                tabBtns.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+
+                this.classList.add('active');
+                document.getElementById('tab-' + targetTab).classList.add('active');
+            });
+        });
+
+        // SELECTION OPERATEUR
+        const opBtns = document.querySelectorAll('.op-btn');
+        opBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                opBtns.forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedOperator = this.getAttribute('data-op');
+            });
+        });
+
+        function saveState() {
+            localStorage.setItem('tontine_membres', JSON.stringify(membres));
+            localStorage.setItem('tontine_depots', JSON.stringify(historiquedepots));
+            renderAll();
+        }
+
+        window.supprimerMembre = function(id) {
+            if (confirm("Voulez-vous supprimer ce membre ?")) {
+                membres = membres.filter(m => m.id !== id);
+                saveState();
+            }
+        };
+
+        function renderAll() {
+            // Select Dépôt
+            const select = document.getElementById('depotMembre');
+            select.innerHTML = '<option value="">-- Choisir un participant --</option>';
+            membres.forEach(m => {
+                select.innerHTML += `<option value="${m.nom}">${m.nom}</option>`;
+            });
+
+            // Historique
+            const histDiv = document.getElementById('listeHistorique');
+            histDiv.innerHTML = historiquedepots.length === 0 ? '<p style="font-size:12px; color:#64748b;">Aucun dépôt enregistré.</p>' : '';
+            historiquedepots.forEach(d => {
