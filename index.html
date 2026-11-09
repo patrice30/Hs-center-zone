@@ -3,466 +3,502 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tontine Circulaire HS Center</title>
-    <!-- Tailwind CSS pour un design mobile moderne et fluide -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <title>Tontine Circulaire - HS Center</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        :root {
+            --primary: #059669;
+            --primary-dark: #047857;
+            --secondary: #0f172a;
+            --wave-color: #00C3F7;
+            --orange-color: #FF6600;
+            --mtn-color: #FFCC00;
+            --moov-color: #00833E;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f1f5f9;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 40px;
         }
-        .pulse-subtle {
-            animation: pulse-slow 3s infinite;
+
+        header {
+            background: linear-gradient(135deg, var(--primary), #0284c7);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
-        @keyframes pulse-slow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+
+        header h1 { font-size: 22px; font-weight: 700; }
+        header p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
-        .roulette-box {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px 5px;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 15px auto;
+            padding: 0 12px;
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-group { margin-bottom: 12px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: #0284c7; color: white; }
+        
+        .operator-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .op-btn {
+            padding: 8px 4px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+
+        .op-btn.selected[data-op="Wave"] { background: var(--wave-color); color: white; border-color: var(--wave-color); }
+        .op-btn.selected[data-op="Orange"] { background: var(--orange-color); color: white; border-color: var(--orange-color); }
+        .op-btn.selected[data-op="MTN"] { background: var(--mtn-color); color: black; border-color: var(--mtn-color); }
+        .op-btn.selected[data-op="Moov"] { background: var(--moov-color); color: white; border-color: var(--moov-color); }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .list-item:last-child { border-bottom: none; }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .badge-wave { background: var(--wave-color); color: white; }
+        .badge-orange { background: var(--orange-color); }
+        .badge-mtn { background: var(--mtn-color); color: black; }
+        .badge-moov { background: var(--moov-color); }
+        .badge-success { background: #10b981; }
+        .badge-pending { background: #f59e0b; }
+
+        /* Module Tirage */
+        .wheel-box {
+            text-align: center;
+            padding: 25px 10px;
+            background: #1e293b;
+            color: white;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .winner-display {
+            font-size: 24px;
+            font-weight: 800;
+            color: #38bdf8;
+            margin: 15px 0;
+            min-height: 35px;
+        }
+
+        .status-msg {
+            text-align: center;
+            font-size: 13px;
+            margin-top: 10px;
+            font-weight: 600;
         }
     </style>
 </head>
-<body class="bg-slate-100 min-h-screen pb-12">
+<body>
 
-    <!-- En-tête / Header -->
-    <header class="bg-gradient-to-r from-emerald-700 via-teal-700 to-slate-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-md mx-auto px-4 py-4 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center border border-emerald-400/30">
-                    <i class="fa-solid font-bold fa-rotate text-emerald-300 text-xl"></i>
-                </div>
-                <div>
-                    <h1 class="font-extrabold text-lg leading-tight tracking-wide">HS CENTER</h1>
-                    <p class="text-xs text-emerald-200 font-medium">Tontine Circulaire & Solidaire</p>
-                </div>
-            </div>
-            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-400/20">
-                <span class="w-2 h-2 mr-1.5 rounded-full bg-emerald-400 animate-pulse"></span> En direct
-            </span>
-        </div>
-    </header>
+<header>
+    <h1>Tontine Circulaire HS</h1>
+    <p>Gestion des cotisations & Tirage au sort</p>
+</header>
 
-    <!-- Navigation par Onglets (Tabs) -->
-    <div class="max-w-md mx-auto px-4 mt-4">
-        <div class="grid grid-cols-3 gap-1 bg-slate-200 p-1.5 rounded-2xl shadow-inner text-xs font-bold">
-            <button id="tab-depot" onclick="switchTab('depot')" class="py-2.5 rounded-xl transition-all duration-200 bg-white text-emerald-700 shadow-sm flex items-center justify-center space-x-1.5">
-                <i class="fa-solid fa-plus-circle text-sm"></i>
-                <span>Nouveau Dépôt</span>
-            </button>
-            <button id="tab-historique" onclick="switchTab('historique')" class="py-2.5 rounded-xl transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5">
-                <i class="fa-solid fa-clock-rotate-left text-sm"></i>
-                <span>Historique</span>
-            </button>
-            <button id="tab-tirage" onclick="switchTab('tirage')" class="py-2.5 rounded-xl transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5">
-                <i class="fa-solid fa-trophy text-sm"></i>
-                <span>Tirage au Sort</span>
-            </button>
+<nav class="nav-tabs">
+    <button class="tab-btn active" onclick="switchTab('depot')">Dépôts</button>
+    <button class="tab-btn" onclick="switchTab('historique')">Historique</button>
+    <button class="tab-btn" onclick="switchTab('tirage')">Tirage au Sort</button>
+    <button class="tab-btn" onclick="switchTab('membres')">Membres</button>
+</nav>
+
+<div class="container">
+
+    <!-- ONGLET 1: DEPOTS -->
+    <div id="tab-depot" class="tab-content active">
+        <div class="card">
+            <div class="card-title">Enregistrer un versement</div>
+            <form id="formDepot">
+                <div class="form-group">
+                    <label>Sélectionner le Membre</label>
+                    <select id="depotMembre" required>
+                        <option value="">-- Choisir un participant --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Montant du Dépôt (FCFA)</label>
+                    <input type="number" id="depotMontant" placeholder="Ex: 10000" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mode de Paiement (Mobile Money)</label>
+                    <div class="operator-group">
+                        <div class="op-btn selected" data-op="Wave" onclick="selectOp(this)">Wave</div>
+                        <div class="op-btn" data-op="Orange" onclick="selectOp(this)">Orange</div>
+                        <div class="op-btn" data-op="MTN" onclick="selectOp(this)">MTN</div>
+                        <div class="op-btn" data-op="Moov" onclick="selectOp(this)">Moov</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Réf. Transaction / Preuve</label>
+                    <input type="text" id="depotRef" placeholder="Ex: TxID #987654 ou Capture" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="btnDepot">Valider le versement</button>
+            </form>
+            <div id="msgDepot" class="status-msg"></div>
         </div>
     </div>
 
-    <!-- Contenu Principal -->
-    <main class="max-w-md mx-auto px-4 mt-4">
-
-        <!-- SECTION 1 : FORMULAIRE DE DÉPÔT -->
-        <section id="sec-depot" class="space-y-4">
-            <!-- Summary Banner -->
-            <div class="bg-emerald-600 rounded-2xl p-4 text-white shadow-lg relative overflow-hidden">
-                <div class="absolute right-0 top-0 translate-x-4 -translate-y-4 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
-                <p class="text-emerald-100 text-xs font-medium">Cagnotte Globale Accumulée</p>
-                <div class="flex items-baseline justify-between mt-1">
-                    <h2 id="cagnotte-total" class="text-2xl font-extrabold tracking-tight">0 FCFA</h2>
-                    <span id="nb-cotisations" class="text-xs bg-emerald-700/60 border border-emerald-400/30 px-2.5 py-1 rounded-lg">0 cotisation(s)</span>
-                </div>
+    <!-- ONGLET 2: HISTORIQUE -->
+    <div id="tab-historique" class="tab-content">
+        <div class="card">
+            <div class="card-title">Derniers Dépôts enregistrés</div>
+            <div id="listeHistorique">
+                <!-- Inscription dynamique -->
             </div>
+        </div>
+    </div>
 
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5">
-                <div class="flex items-center space-x-2 border-b border-slate-100 pb-3 mb-4">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm">Formulaire de Versement</h3>
-                        <p class="text-xs text-slate-400">Soumettez la preuve de votre cotisation</p>
-                    </div>
-                </div>
+    <!-- ONGLET 3: TIRAGE AU SORT -->
+    <div id="tab-tirage" class="tab-content">
+        <div class="wheel-box">
+            <p style="font-size: 14px; opacity: 0.8;">Bénéficiaire du prochain tour :</p>
+            <div id="winnerDisplay" class="winner-display">???</div>
+            <button class="btn btn-secondary" onclick="lancerTirage()" id="btnTirage">Lancer le Tirage au Sort</button>
+        </div>
 
-                <form id="tontineForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                    <!-- Nom du Membre -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Nom & Prénom du Membre *</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                                <i class="fa-solid fa-user text-sm"></i>
-                            </span>
-                            <input type="text" id="membre" required placeholder="Ex: Patrice Kouassi" 
-                                class="w-full pl-10 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
-                        </div>
-                    </div>
-
-                    <!-- Montant FCFA -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Montant du dépôt (FCFA) *</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 font-bold text-xs">
-                                FCFA
-                            </span>
-                            <input type="number" id="montant" required min="1000" step="500" placeholder="Ex: 10000" 
-                                class="w-full pl-14 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all font-semibold">
-                        </div>
-                    </div>
-
-                    <!-- Opérateur Mobile Money -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Opérateur Mobile Money *</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            <label class="cursor-pointer">
-                                <input type="radio" name="operator" value="Orange" checked class="peer sr-only">
-                                <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-center peer-checked:border-orange-500 peer-checked:bg-orange-50 peer-checked:text-orange-600 transition-all">
-                                    <i class="fa-solid fa-mobile-screen text-sm block mb-1"></i>
-                                    <span class="text-xs font-bold">Orange</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="operator" value="MTN" class="peer sr-only">
-                                <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-center peer-checked:border-amber-500 peer-checked:bg-amber-50 peer-checked:text-amber-600 transition-all">
-                                    <i class="fa-solid fa-mobile-screen text-sm block mb-1"></i>
-                                    <span class="text-xs font-bold">MTN</span>
-                                </div>
-                            </label>
-                            <label class="cursor-pointer">
-                                <input type="radio" name="operator" value="Moov" class="peer sr-only">
-                                <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-center peer-checked:border-blue-500 peer-checked:bg-blue-50 peer-checked:text-blue-600 transition-all">
-                                    <i class="fa-solid fa-mobile-screen text-sm block mb-1"></i>
-                                    <span class="text-xs font-bold">Moov</span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Référence de transaction / Preuve -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">Référence de Transaction ou Reçu *</label>
-                        <div class="relative">
-                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                                <i class="fa-solid fa-hashtag text-sm"></i>
-                            </span>
-                            <input type="text" id="preuve" required placeholder="Ex: MP241108.1143.A8921" 
-                                class="w-full pl-10 pr-3 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all font-mono">
-                        </div>
-                    </div>
-
-                    <!-- Bouton Submit -->
-                    <button type="submit" id="btnSubmit" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center space-x-2 text-sm">
-                        <i class="fa-solid fa-paper-plane"></i>
-                        <span>Enregistrer la Cotisation</span>
-                    </button>
-                </form>
-                
-                <div id="statusAlert" class="hidden mt-4 p-3 rounded-xl text-xs font-semibold text-center"></div>
+        <div class="card">
+            <div class="card-title">Participants Éligibles</div>
+            <div id="listeEligibles">
+                <!-- Participants éligibles -->
             </div>
-        </section>
+        </div>
+    </div>
 
-
-        <!-- SECTION 2 : HISTORIQUE ET FIL D'ACTUALITÉ -->
-        <section id="sec-historique" class="hidden space-y-4">
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
-                <div class="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-sm">Fil d'Actualité des Dépôts</h3>
-                        <p class="text-xs text-slate-400">Liste des contributions enregistrées</p>
-                    </div>
-                    <span class="px-2.5 py-1 bg-slate-100 text-slate-600 font-bold rounded-lg text-xs" id="total-count-badge">0 versement(s)</span>
+    <!-- ONGLET 4: MEMBRES -->
+    <div id="tab-membres" class="tab-content">
+        <div class="card">
+            <div class="card-title">Ajouter un Participant</div>
+            <form id="formMembre">
+                <div class="form-group">
+                    <label>Nom complet</label>
+                    <input type="text" id="membreNom" placeholder="Ex: Patrice K." required>
                 </div>
-
-                <!-- Liste des dépôts -->
-                <div id="depot-list" class="space-y-3">
-                    <!-- Généré dynamiquement en JS -->
+                <div class="form-group">
+                    <label>Numéro Téléphone</label>
+                    <input type="tel" id="membreTel" placeholder="Ex: 0700000000" required>
                 </div>
+                <button type="submit" class="btn btn-primary">Enregistrer le Membre</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Liste des Membres</div>
+            <div id="listeMembres">
+                <!-- Inscription dynamique des membres -->
             </div>
-        </section>
+        </div>
+    </div>
 
+</div>
 
-        <!-- SECTION 3 : MODULE DE TIRAGE AU SORT -->
-        <section id="sec-tirage" class="hidden space-y-4">
-            <div class="roulette-box rounded-2xl p-5 text-white shadow-xl relative overflow-hidden border border-slate-700">
-                <div class="text-center space-y-1 mb-5">
-                    <span class="px-3 py-1 bg-amber-500/20 border border-amber-400/30 text-amber-300 rounded-full text-[10px] font-extrabold uppercase tracking-widest inline-block">
-                        <i class="fa-solid fa-star mr-1"></i> Attribution du Tour
-                    </span>
-                    <h3 class="text-xl font-black text-white">TIRAGE AU SORT DE LA TONTINE</h3>
-                    <p class="text-xs text-slate-300">Désignez aléatoirement le bénéficiaire du tour</p>
-                </div>
+<script>
+    // URL Apps Script pour l'enregistrement final sur Google Sheets
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0KazjTG6OuwUicZYQLtzgl_nr48dSzsYZOJnfXvTL8xJjtMkVo1purRuauhpiZR5Q/exec";
 
-                <!-- Affichage Roulette Animée -->
-                <div class="relative bg-slate-900/90 border-2 border-amber-500/50 rounded-2xl p-6 text-center shadow-inner my-4 overflow-hidden min-h-[140px] flex flex-col items-center justify-center">
-                    <div id="roulette-display" class="transition-all duration-75">
-                        <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-2 border border-slate-700">
-                            <i class="fa-solid fa-users text-2xl text-slate-500"></i>
-                        </div>
-                        <p class="text-xs text-slate-400 font-medium">Prêt pour le tirage</p>
-                    </div>
+    // Données locales d'exemple
+    let membres = JSON.parse(localStorage.getItem('tontine_membres')) || [
+        { id: 1, nom: "Komenan Patrice", tel: "07080000", servi: false },
+        { id: 2, nom: "Koné Mariam", tel: "05050000", servi: false },
+        { id: 3, nom: "Yao Jean", tel: "01010000", servi: true }
+    ];
 
-                    <!-- Gagnant final -->
-                    <div id="winner-display" class="hidden space-y-2 transform transition-all scale-90 opacity-0">
-                        <div class="w-16 h-16 bg-gradient-to-tr from-amber-400 to-yellow-200 text-slate-950 rounded-full flex items-center justify-center mx-auto shadow-lg shadow-amber-500/50 animate-bounce">
-                            <i class="fa-solid fa-crown text-2xl"></i>
-                        </div>
-                        <p class="text-xs text-amber-300 font-bold tracking-widest uppercase">Gagnant du Tour !</p>
-                        <h2 id="winner-name" class="text-2xl font-black text-white tracking-wide">--</h2>
-                    </div>
-                </div>
+    let historiquedepots = JSON.parse(localStorage.getItem('tontine_depots')) || [
+        { nom: "Komenan Patrice", montant: 20000, operateur: "Wave", ref: "WAV-98712", date: "08/11/2026", statut: "Validé" },
+        { nom: "Yao Jean", montant: 20000, operateur: "Orange", ref: "OM-55412", date: "07/11/2026", statut: "Validé" }
+    ];
 
-                <!-- Action Button -->
-                <button id="btn-draw" onclick="startDraw()" class="w-full py-4 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 active:scale-95 text-slate-950 font-black rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center space-x-2 text-sm tracking-wide">
-                    <i class="fa-solid fa-dice-five text-lg"></i>
-                    <span>LANCER LE TIRAGE AU SORT</span>
-                </button>
-            </div>
+    let selectedOperator = "Wave";
 
-            <!-- Historique des gagnants -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-4">
-                <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider mb-3 flex items-center space-x-1.5">
-                    <i class="fa-solid fa-trophy text-amber-500"></i>
-                    <span>Bénéficiaires Précédents</span>
-                </h4>
-                <div id="winners-history" class="space-y-2">
-                    <p class="text-xs text-slate-400 italic text-center py-2">Aucun tirage réalisé pour le moment.</p>
-                </div>
-            </div>
-        </section>
+    function saveState() {
+        localStorage.setItem('tontine_membres', JSON.stringify(membres));
+        localStorage.setItem('tontine_depots', JSON.stringify(historiquedepots));
+        renderAll();
+    }
 
-    </main>
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-    <!-- JS Logic -->
-    <script>
-        // URL de votre Web App Google Apps Script
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0KazjTG6OuwUicZYQLtzgl_nr48dSzsYZOJnfXvTL8xJjtMkVo execution /exec";
+        document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+    }
 
-        // Données d'exemple préchargées
-        let deposits = [
-            { id: 1, membre: "Patrice Kouassi", montant: 25000, operateur: "Orange", preuve: "MP241108.0912.B123", statut: "Validé", date: "08/11/2026 à 09:12" },
-            { id: 2, membre: "Awa Diop", montant: 25000, operateur: "MTN", preuve: "MTN-8821903", statut: "Validé", date: "08/11/2026 à 10:05" },
-            { id: 3, membre: "Jean-Marc Yao", montant: 25000, operateur: "Moov", preuve: "MOV-9012398", statut: "En attente", date: "08/11/2026 à 11:20" }
-        ];
+    function selectOp(el) {
+        document.querySelectorAll('.op-btn').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+        selectedOperator = el.getAttribute('data-op');
+    }
 
-        let winnersList = [];
-
-        // Initialisation de la page
-        document.addEventListener("DOMContentLoaded", () => {
-            renderDeposits();
-            updateStats();
+    function renderAll() {
+        // Render Membres Select dans Dépôt
+        const select = document.getElementById('depotMembre');
+        select.innerHTML = '<option value="">-- Choisir un participant --</option>';
+        membres.forEach(m => {
+            select.innerHTML += `<option value="${m.nom}">${m.nom}</option>`;
         });
 
-        // Gestion du changement d'onglet
-        function switchTab(tabName) {
-            const tabs = ['depot', 'historique', 'tirage'];
-            tabs.forEach(t => {
-                const btn = document.getElementById(`tab-${t}`);
-                const sec = document.getElementById(`sec-${t}`);
-                if (t === tabName) {
-                    btn.className = "py-2.5 rounded-xl transition-all duration-200 bg-white text-emerald-700 shadow-sm flex items-center justify-center space-x-1.5";
-                    sec.classList.remove('hidden');
-                } else {
-                    btn.className = "py-2.5 rounded-xl transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center space-x-1.5";
-                    sec.classList.add('hidden');
-                }
-            });
-        }
-
-        // Envoi du formulaire de dépôt
-        function handleFormSubmit(e) {
-            e.preventDefault();
-
-            const membre = document.getElementById("membre").value.trim();
-            const montant = parseInt(document.getElementById("montant").value);
-            const operateur = document.querySelector('input[name="operator"]:checked').value;
-            const preuve = document.getElementById("preuve").value.trim();
-            const btn = document.getElementById("btnSubmit");
-            const alert = document.getElementById("statusAlert");
-
-            if (!membre || !montant || !preuve) return;
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> <span>Enregistrement en cours...</span>`;
-
-            // Nouvel enregistrement local immédiat
-            const newDeposit = {
-                id: Date.now(),
-                membre: membre,
-                montant: montant,
-                operateur: operateur,
-                preuve: preuve,
-                statut: "Validé",
-                date: new Date().toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-            };
-
-            // Simulation d'envoi vers Apps Script
-            fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newDeposit)
-            }).catch(err => console.log("Sauvegarde locale active"));
-
-            setTimeout(() => {
-                deposits.unshift(newDeposit);
-                renderDeposits();
-                updateStats();
-
-                document.getElementById("tontineForm").reset();
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> <span>Enregistrer la Cotisation</span>`;
-
-                alert.className = "mt-4 p-3 rounded-xl text-xs font-semibold text-center bg-emerald-100 text-emerald-800 border border-emerald-300 block";
-                alert.innerHTML = `<i class="fa-solid fa-circle-check mr-1"></i> Dépôt de ${montant.toLocaleString()} FCFA pour ${membre} enregistré avec succès !`;
-
-                setTimeout(() => alert.classList.add('hidden'), 4000);
-            }, 800);
-        }
-
-        // Mettre à jour les statistiques et cagnottes
-        function updateStats() {
-            const total = deposits.reduce((sum, item) => sum + item.montant, 0);
-            document.getElementById("cagnotte-total").textContent = total.toLocaleString() + " FCFA";
-            document.getElementById("nb-cotisations").textContent = `${deposits.length} cotisation(s)`;
-            document.getElementById("total-count-badge").textContent = `${deposits.length} versement(s)`;
-        }
-
-        // Rendu de l'historique des versements
-        function renderDeposits() {
-            const container = document.getElementById("depot-list");
-            container.innerHTML = "";
-
-            if (deposits.length === 0) {
-                container.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-4">Aucun dépôt enregistré.</p>`;
-                return;
-            }
-
-            deposits.forEach(item => {
-                const badgeColor = item.statut === "Validé" 
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200" 
-                    : "bg-amber-50 text-amber-700 border-amber-200";
-
-                const opColor = item.operateur === "Orange" 
-                    ? "text-orange-500 bg-orange-50" 
-                    : (item.operateur === "MTN" ? "text-amber-500 bg-amber-50" : "text-blue-500 bg-blue-50");
-
-                const card = `
-                    <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200/70 flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-xl ${opColor} flex items-center justify-center font-bold text-sm">
-                                <i class="fa-solid fa-mobile-screen"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800 text-xs">${item.membre}</h4>
-                                <p class="text-[10px] text-slate-400 font-medium">${item.date} • <span class="font-mono">${item.preuve}</span></p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <span class="font-extrabold text-slate-900 text-xs block">+${item.montant.toLocaleString()} FCFA</span>
-                            <span class="inline-block text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeColor}">${item.statut}</span>
-                        </div>
+        // Render Liste Historique
+        const histDiv = document.getElementById('listeHistorique');
+        histDiv.innerHTML = '';
+        historiquedepots.forEach(d => {
+            const badgeClass = `badge-${d.operateur.toLowerCase()}`;
+            histDiv.innerHTML += `
+                <div class="list-item">
+                    <div>
+                        <strong>${d.nom}</strong><br>
+                        <small style="color:#64748b">${d.date} • Réf: ${d.ref}</small>
                     </div>
-                `;
-                container.innerHTML += card;
-            });
-        }
-
-        // Animation et Tirage au Sort
-        function startDraw() {
-            if (deposits.length === 0) {
-                alert("Veuillez d'abord enregistrer au moins une cotisation pour effectuer un tirage au sort.");
-                return;
-            }
-
-            const btn = document.getElementById("btn-draw");
-            const rouletteDisplay = document.getElementById("roulette-display");
-            const winnerDisplay = document.getElementById("winner-display");
-            const winnerName = document.getElementById("winner-name");
-
-            // Extraction des membres uniques
-            const members = [...new Set(deposits.map(d => d.membre))];
-
-            btn.disabled = true;
-            btn.classList.add("opacity-50");
-
-            winnerDisplay.classList.add("hidden");
-            winnerDisplay.classList.remove("scale-100", "opacity-100");
-            winnerDisplay.classList.add("scale-90", "opacity-0");
-            rouletteDisplay.classList.remove("hidden");
-
-            let counter = 0;
-            const maxCycles = 25;
-            const interval = setInterval(() => {
-                const randomMember = members[Math.floor(Math.random() * members.length)];
-                rouletteDisplay.innerHTML = `
-                    <div class="w-16 h-16 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-2 border border-amber-400/40 animate-spin">
-                        <i class="fa-solid fa-arrows-spin text-2xl"></i>
+                    <div style="text-align:right">
+                        <strong>${parseInt(d.montant).toLocaleString()} FCFA</strong><br>
+                        <span class="badge ${badgeClass}">${d.operateur}</span>
                     </div>
-                    <p class="text-lg font-black text-amber-300">${randomMember}</p>
-                `;
-                counter++;
-
-                if (counter >= maxCycles) {
-                    clearInterval(interval);
-                    
-                    // Sélection du vainqueur
-                    const winner = members[Math.floor(Math.random() * members.length)];
-                    
-                    rouletteDisplay.classList.add("hidden");
-                    winnerName.textContent = winner;
-                    winnerDisplay.classList.remove("hidden");
-                    
-                    setTimeout(() => {
-                        winnerDisplay.classList.remove("scale-90", "opacity-0");
-                        winnerDisplay.classList.add("scale-100", "opacity-100");
-                        
-                        // Déclenchement des confettis
-                        confetti({
-                            particleCount: 100,
-                            spread: 70,
-                            origin: { y: 0.6 }
-                        });
-                    }, 50);
-
-                    // Ajout à l'historique des gagnants
-                    addWinnerToHistory(winner);
-
-                    btn.disabled = false;
-                    btn.classList.remove("opacity-50");
-                }
-            }, 100);
-        }
-
-        // Historique des tirages
-        function addWinnerToHistory(name) {
-            const historyContainer = document.getElementById("winners-history");
-            if (winnersList.length === 0) {
-                historyContainer.innerHTML = "";
-            }
-
-            const winnerObj = {
-                name: name,
-                date: new Date().toLocaleDateString('fr-FR')
-            };
-
-            winnersList.unshift(winnerObj);
-
-            const item = `
-                <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200/60 flex items-center justify-between text-xs">
-                    <div class="flex items-center space-x-2">
-                        <i class="fa-solid fa-crown text-amber-500"></i>
-                        <span class="font-bold text-slate-800">${name}</span>
-                    </div>
-                    <span class="text-[10px] text-amber-700 font-semibold bg-amber-100 px-2 py-0.5 rounded-md">Tour du ${winnerObj.date}</span>
                 </div>
             `;
-            historyContainer.innerHTML = item + historyContainer.innerHTML;
+        });
+
+        // Render Liste Membres
+        const membresDiv = document.getElementById('listeMembres');
+        membresDiv.innerHTML = '';
+        membres.forEach(m => {
+            membresDiv.innerHTML += `
+                <div class="list-item">
+                    <div>
+                        <strong>${m.nom}</strong><br>
+                        <small style="color:#64748b">${m.tel}</small>
+                    </div>
+                    <div>
+                        <span class="badge ${m.servi ? 'badge-pending' : 'badge-success'}">
+                            ${m.servi ? 'Déjà servi' : 'En attente'}
+                        </span>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Render Eligibles Tirage
+        const eligiblesDiv = document.getElementById('listeEligibles');
+        eligiblesDiv.innerHTML = '';
+        const eligibles = membres.filter(m => !m.servi);
+        if (eligibles.length === 0) {
+            eligiblesDiv.innerHTML = '<p style="text-align:center; color:#64748b; font-size:13px;">Tous les membres ont déjà été tirés au sort !</p>';
+        } else {
+            eligibles.forEach(m => {
+                eligiblesDiv.innerHTML += `
+                    <div class="list-item">
+                        <span><strong>${m.nom}</strong></span>
+                        <span class="badge badge-success">Éligible</span>
+                    </div>
+                `;
+            });
         }
-    </script>
+    }
+
+    // Ajout Dépôt
+    document.getElementById('formDepot').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nom = document.getElementById('depotMembre').value;
+        const montant = document.getElementById('depotMontant').value;
+        const ref = document.getElementById('depotRef').value;
+        const msg = document.getElementById('msgDepot');
+
+        const nouveauDepot = {
+            nom: nom,
+            montant: montant,
+            operateur: selectedOperator,
+            ref: ref,
+            date: new Date().toLocaleDateString('fr-FR'),
+            statut: "Validé"
+        };
+
+        historiquedepots.unshift(nouveauDepot);
+        saveState();
+
+        // Envoi optionnel vers Google Sheets Apps Script
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(nouveauDepot)
+        }).catch(() => {});
+
+        msg.style.color = "#059669";
+        msg.textContent = "Dépôt enregistré avec succès !";
+        document.getElementById('formDepot').reset();
+
+        setTimeout(() => { msg.textContent = ""; }, 3000);
+    });
+
+    // Ajout Membre
+    document.getElementById('formMembre').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nom = document.getElementById('membreNom').value;
+        const tel = document.getElementById('membreTel').value;
+
+        membres.push({
+            id: Date.now(),
+            nom: nom,
+            tel: tel,
+            servi: false
+        });
+
+        saveState();
+        document.getElementById('formMembre').reset();
+    });
+
+    // Module Tirage au Sort
+    function lancerTirage() {
+        const eligibles = membres.filter(m => !m.servi);
+        const btn = document.getElementById('btnTirage');
+        const display = document.getElementById('winnerDisplay');
+
+        if (eligibles.length === 0) {
+            alert("Tous les membres ont déjà été servis pour ce cycle !");
+            return;
+        }
+
+        btn.disabled = true;
+        let counter = 0;
+
+        const interval = setInterval(() => {
+            const randomIndex = Math.floor(Math.random() * eligibles.length);
+            display.textContent = eligibles[randomIndex].nom;
+            counter++;
+
+            if (counter > 20) {
+                clearInterval(interval);
+                const gagnant = eligibles[Math.floor(Math.random() * eligibles.length)];
+                display.textContent = "🎉 " + gagnant.nom + " 🎉";
+
+                // Marquer le gagnant comme servi
+                const indexObj = membres.findIndex(m => m.id === gagnant.id);
+                if (indexObj !== -1) {
+                    membres[indexObj].servi = true;
+                    saveState();
+                }
+
+                btn.disabled = false;
+            }
+        }, 100);
+    }
+
+    // Initialisation
+    renderAll();
+</script>
+
 </body>
 </html>
