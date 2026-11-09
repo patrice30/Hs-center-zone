@@ -93,8 +93,7 @@
 </div>
 
 <script>
-    // Mettez votre URL Apps Script exacte ici :
-    const API_URL = "VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI";
+    const API_URL =https://script.google.com/macros/s/AKfycbxdbh5YAF22UNkq5bnn4HbUXx1MR4jbh6mYjJBiWPBwUNvdiNrVU5CwYMQpvTKzgXCy/exec
 
     let membres = [];
     let depots = [];
@@ -123,7 +122,7 @@
             })
             .catch(err => {
                 console.error(err);
-                document.getElementById('loader').innerText = "Mode local actif (Vérifiez le déploiement Sheets)";
+                document.getElementById('loader').innerText = "Erreur de chargement Google Sheets";
             });
     }
 
