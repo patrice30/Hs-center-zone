@@ -139,7 +139,7 @@
         if(confirm("Supprimer ce membre ?")) {
             membres = membres.filter(m => m.id !== id);
             sauvegarderLocal();
-            if(!API_URL.includes("VOTRE_URL")) {
+            if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
                 fetch(API_URL, {
                     method: "POST",
                     mode: "no-cors",
@@ -163,7 +163,7 @@
         this.reset();
         alert("Membre ajouté !");
 
-        if(!API_URL.includes("VOTRE_URL")) {
+        if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
             fetch(API_URL, {
                 method: "POST",
                 mode: "no-cors",
@@ -187,7 +187,7 @@
         this.reset();
         alert("Dépôt enregistré !");
 
-        if(!API_URL.includes("VOTRE_URL")) {
+        if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
             fetch(API_URL, {
                 method: "POST",
                 mode: "no-cors",
@@ -212,7 +212,7 @@
             sauvegarderLocal();
         }
 
-        if(!API_URL.includes("VOTRE_URL")) {
+        if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
             fetch(API_URL, {
                 method: "POST",
                 mode: "no-cors",
@@ -226,7 +226,7 @@
     rafraichir();
 
     // Tentative de synchronisation en arrière-plan si l'URL est configurée
-    if(!API_URL.includes("VOTRE_URL")) {
+    if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
         fetch(API_URL)
             .then(res => res.json())
             .then(data => {
