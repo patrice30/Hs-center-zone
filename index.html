@@ -1,247 +1,105 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tontine HS Center</title>
-    <style>
-        body { font-family: system-ui, sans-serif; background: #f8fafc; margin: 0; padding: 0; color: #1e293b; }
-        header { background: #059669; color: white; padding: 15px; text-align: center; }
-        .nav { display: flex; background: white; border-bottom: 1px solid #cbd5e1; position: sticky; top: 0; z-index: 10; }
-        .nav button { flex: 1; padding: 12px 5px; border: none; background: white; font-weight: bold; font-size: 13px; color: #64748b; cursor: pointer; }
-        .nav button.active { color: #059669; border-bottom: 3px solid #059669; background: #f0fdf4; }
-        .container { max-width: 500px; margin: 15px auto; padding: 10px; }
-        .panel { display: none; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .panel.active { display: block; }
-        label { display: block; font-size: 13px; font-weight: bold; margin-top: 10px; color: #475569; }
-        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-        button.action { width: 100%; background: #059669; color: white; padding: 12px; border: none; border-radius: 6px; margin-top: 15px; font-weight: bold; font-size: 15px; cursor: pointer; }
-        .btn-supp { background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
-        #loader { text-align: center; font-size: 12px; color: #0284c7; margin-bottom: 10px; font-weight: bold; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HS Center – Recharge Canal+</title>
+<style>
+:root{--bg:#f4f4f2;--surface:#fff;--ink:#17201c;--muted:#65716b;--line:#dcdfd9;--accent:#0f6b4f;--accent-ink:#fff;--warm:#b8741a;--bad:#b33a2e;--chip:#e9ede8;--wa:#1c9a52;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101814;--surface:#192420;--ink:#e9efeb;--muted:#9fb0a6;--line:#2a3a31;--accent:#4cc79b;--accent-ink:#06261a;--warm:#e0a04a;--bad:#ee7b6e;--chip:#22322a;--wa:#2fae68;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101814;--surface:#192420;--ink:#e9efeb;--muted:#9fb0a6;--line:#2a3a31;--accent:#4cc79b;--accent-ink:#06261a;--warm:#e0a04a;--bad:#ee7b6e;--chip:#22322a;--wa:#2fae68;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:var(--accent);color:var(--accent-ink);padding:20px 16px}
+.w{max-width:620px;margin:0 auto}
+h1{font:700 1.6rem/1.15 Georgia,"Times New Roman",serif;margin:0}
+.tag{margin:4px 0 0;opacity:.9;font-size:.92rem}
+main{max-width:620px;margin:0 auto;padding:16px 16px 60px}
+section{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+h2{font:700 1.05rem/1.3 Georgia,serif;margin:0 0 10px;display:flex;gap:10px;align-items:center}
+h2 i{font-style:normal;background:var(--accent);color:var(--accent-ink);width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font:700 .85rem system-ui}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.opt span{display:block;border:2px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--chip);min-height:62px}
+.opt b{display:block}.opt small{color:var(--muted)}
+.opt input:checked+span{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 1px var(--accent)}
+.opt input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.list .opt span{min-height:0;padding:9px 12px}
+.list{display:grid;gap:8px}
+label.f{display:block;font-size:.88rem;color:var(--muted);margin:12px 0 4px}
+input[type=text],input[type=tel],select{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
+input:focus-visible,select:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.tot{background:var(--chip);border-radius:10px;padding:12px 14px;margin-top:12px}
+.tot b{font-size:1.5rem;color:var(--accent);display:block}
+.note{font-size:.84rem;color:var(--muted);margin:8px 0 0}
+.pay{border:2px dashed var(--accent);border-radius:10px;padding:12px 14px;margin-top:12px}
+.pay b{font-size:1.25rem;letter-spacing:.02em}
+.err{color:var(--bad);font-size:.9rem;margin:10px 0 0;min-height:1.2em}
+a.wa{display:block;text-align:center;text-decoration:none;background:var(--wa);color:#fff;border-radius:10px;padding:14px;font-weight:700;font-size:1.02rem}
+a.wa[aria-disabled=true]{opacity:.5}
+button.cp{width:100%;margin-top:8px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--chip);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+</style>
 </head>
 <body>
+<header><div class="w"><h1>Recharge Canal+</h1><p class="tag">HS Center · distributeur agréé · réponse rapide sur WhatsApp</p></div></header>
+<main>
+<section><h2><i>1</i>Choisissez votre bouquet</h2>
+<div class="opts" id="bq"></div>
+<label class="f" for="mois">Nombre de mois</label>
+<select id="mois"></select></section>
 
-<header>
-    <h2>Tontine HS Center</h2>
-</header>
+<section><h2><i>2</i>Options (facultatif)</h2>
+<div class="list" id="ops"></div>
+<p class="note">Le prix des options s’ajoute automatiquement au bouquet, pour chaque mois. La Promo du moment n’est pas valable avec Tout Canal. Super Sport s’ajoute automatiquement avec Évasion et Access+.</p></section>
 
-<div class="nav">
-    <button onclick="ouvrirOnglet('depot', this)" class="active">Dépôts</button>
-    <button onclick="ouvrirOnglet('historique', this)">Historique</button>
-    <button onclick="ouvrirOnglet('tirage', this)">Tirage</button>
-    <button onclick="ouvrirOnglet('membres', this)">Membres</button>
-</div>
+<section><h2><i>3</i>Vos informations</h2>
+<label class="f" for="dec">Numéro de décodeur ou d’abonné Canal+</label>
+<input type="text" id="dec" inputmode="numeric" autocomplete="off" placeholder="Ex. 1234567890">
+<label class="f" for="nom">Votre nom</label>
+<input type="text" id="nom" autocomplete="name">
+<label class="f" for="tel">Votre numéro de téléphone</label>
+<input type="tel" id="tel" autocomplete="tel" placeholder="Ex. 07 00 00 00 00"></section>
 
-<div class="container">
-    <div id="loader">Mode local actif</div>
+<section><h2><i>4</i>Payez par Mobile Money</h2>
+<div class="tot"><span>Montant à payer</span><b id="tot">0 FCFA</b><span id="optnote" class="note"></span></div>
+<label class="f" for="net">Votre réseau</label>
+<select id="net"></select>
+<div class="pay" id="pay"></div>
+<label class="f" for="ref">Référence ou numéro de la transaction</label>
+<input type="text" id="ref" autocomplete="off" placeholder="Reçue par SMS après le paiement">
+<p class="note">Faites le dépôt <b>uniquement</b> au numéro affiché ci-dessus. Ne partagez jamais votre code secret.</p></section>
 
-    <!-- PANEL DEPOT -->
-    <div id="depot" class="panel active">
-        <h3>Faire un versement</h3>
-        <form id="formDepot">
-            <label>Membre :</label>
-            <select id="selMembre" required>
-                <option value="">-- Choisir --</option>
-            </select>
-
-            <label>Montant (FCFA) :</label>
-            <input type="number" id="montant" placeholder="Ex: 10000" required>
-
-            <label>Opérateur Mobile Money :</label>
-            <select id="operateur">
-                <option value="Wave">Wave</option>
-                <option value="Orange">Orange</option>
-                <option value="MTN">MTN</option>
-                <option value="Moov">Moov</option>
-            </select>
-
-            <label>Référence / Preuve :</label>
-            <input type="text" id="ref" placeholder="Réf de transaction" required>
-
-            <button type="submit" class="action">Valider le dépôt</button>
-        </form>
-    </div>
-
-    <!-- PANEL HISTORIQUE -->
-    <div id="historique" class="panel">
-        <h3>Historique des Dépôts</h3>
-        <div id="listeHistorique">Aucun dépôt.</div>
-    </div>
-
-    <!-- PANEL TIRAGE -->
-    <div id="tirage" class="panel" style="text-align: center;">
-        <h3>Tirage au Sort</h3>
-        <div id="gagnantDisplay" style="font-size: 22px; font-weight: bold; color: #0284c7; margin: 20px 0;">???</div>
-        <button onclick="lancerTirage()" class="action" style="background: #0284c7;">Lancer le Tirage</button>
-    </div>
-
-    <!-- PANEL MEMBRES -->
-    <div id="membres" class="panel">
-        <h3>Ajouter un Membre</h3>
-        <form id="formMembre">
-            <label>Nom :</label>
-            <input type="text" id="nomMembre" placeholder="Nom complet" required>
-            <label>Téléphone :</label>
-            <input type="text" id="telMembre" placeholder="Numéro" required>
-            <button type="submit" class="action">Ajouter</button>
-        </form>
-        <h3 style="margin-top: 20px;">Liste des Membres</h3>
-        <div id="listeMembres">Aucun membre.</div>
-    </div>
-</div>
-
+<section><h2><i>5</i>Envoyez votre demande</h2>
+<p class="err" id="err" role="alert"></p>
+<a class="wa" id="send" target="_blank" rel="noopener noreferrer" href="#" aria-disabled="true">Envoyer ma demande sur WhatsApp</a>
+<button class="cp" id="copy" type="button">Copier le message</button>
+<p class="note">Votre abonnement est rechargé dès que la boutique a vérifié votre paiement.</p></section>
+</main>
 <script>
-    const API_URL = "VOTRE_URL_GOOGLE_APPS_SCRIPT_ICI";
-
-    // Chargement initial depuis la mémoire locale (évite tout blocage)
-    let membres = JSON.parse(localStorage.getItem('t_membres')) || [
-        {id: 1, nom: "Komenan Patrice", tel: "07080000", servi: false}
-    ];
-    let depots = JSON.parse(localStorage.getItem('t_depots')) || [];
-
-    function ouvrirOnglet(nomOnglet, elm) {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
-        
-        document.getElementById(nomOnglet).classList.add('active');
-        if(elm) elm.classList.add('active');
-    }
-
-    function rafraichir() {
-        let sel = document.getElementById('selMembre');
-        sel.innerHTML = '<option value="">-- Choisir --</option>';
-        membres.forEach(m => {
-            sel.innerHTML += `<option value="${m.nom}">${m.nom}</option>`;
-        });
-
-        let divM = document.getElementById('listeMembres');
-        divM.innerHTML = membres.length === 0 ? 'Aucun membre.' : '';
-        membres.forEach(m => {
-            divM.innerHTML += `<div class="item"><span><b>${m.nom}</b> (${m.tel}) - ${m.servi ? 'Servi' : 'En attente'}</span> <button class="btn-supp" onclick="supprimer(${m.id})">Supprimer</button></div>`;
-        });
-
-        let divH = document.getElementById('listeHistorique');
-        divH.innerHTML = depots.length === 0 ? 'Aucun dépôt.' : '';
-        depots.forEach(d => {
-            divH.innerHTML += `<div class="item"><span><b>${d.nom}</b><br><small>${d.date} - ${d.ref}</small></span> <span><b>${d.montant} FCFA</b><br>(${d.operateur})</span></div>`;
-        });
-    }
-
-    function sauvegarderLocal() {
-        localStorage.setItem('t_membres', JSON.stringify(membres));
-        localStorage.setItem('t_depots', JSON.stringify(depots));
-        rafraichir();
-    }
-
-    window.supprimer = function(id) {
-        if(confirm("Supprimer ce membre ?")) {
-            membres = membres.filter(m => m.id !== id);
-            sauvegarderLocal();
-            if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
-                fetch(API_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "deleteMembre", id: id })
-                }).catch(() => {});
-            }
-        }
-    }
-
-    document.getElementById('formMembre').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const nouveauMembre = {
-            id: Date.now(),
-            nom: document.getElementById('nomMembre').value,
-            tel: document.getElementById('telMembre').value,
-            servi: false
-        };
-        membres.push(nouveauMembre);
-        sauvegarderLocal();
-        this.reset();
-        alert("Membre ajouté !");
-
-        if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
-            fetch(API_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "addMembre", ...nouveauMembre })
-            }).catch(() => {});
-        }
-    });
-
-    document.getElementById('formDepot').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const nouveauDepot = {
-            nom: document.getElementById('selMembre').value,
-            montant: document.getElementById('montant').value,
-            operateur: document.getElementById('operateur').value,
-            ref: document.getElementById('ref').value,
-            date: new Date().toLocaleDateString()
-        };
-        depots.unshift(nouveauDepot);
-        sauvegarderLocal();
-        this.reset();
-        alert("Dépôt enregistré !");
-
-        if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
-            fetch(API_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "addDepot", ...nouveauDepot })
-            }).catch(() => {});
-        }
-    });
-
-    function lancerTirage() {
-        let eligibles = membres.filter(m => !m.servi);
-        if(eligibles.length === 0) {
-            alert("Tous les membres ont déjà été servis !");
-            return;
-        }
-        let gagnant = eligibles[Math.floor(Math.random() * eligibles.length)];
-        document.getElementById('gagnantDisplay').innerText = "🎉 " + gagnant.nom + " 🎉";
-
-        let idx = membres.findIndex(m => m.id === gagnant.id);
-        if(idx !== -1) {
-            membres[idx].servi = true;
-            sauvegarderLocal();
-        }
-
-        if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
-            fetch(API_URL, {
-                method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "updateServi", id: gagnant.id })
-            }).catch(() => {});
-        }
-    }
-
-    // Affichage immédiat sans blocage
-    rafraichir();
-
-    // Tentative de synchronisation en arrière-plan si l'URL est configurée
-    if(!API_URL.includes("https://script.google.com/macros/s/AKfycbxOubElw3Oa1_PK3nbsKZYnIHfRezCmjfJ2d1PKtF2GdQHvuNYkWgeNehNCiXx2YjBw/exec")) {
-        fetch(API_URL)
-            .then(res => res.json())
-            .then(data => {
-                if(data.membres && data.membres.length > 0) {
-                    membres = data.membres;
-                    depots = data.depots || [];
-                    sauvegarderLocal();
-                    document.getElementById('loader').style.display = 'none';
-                }
-            })
-            .catch(() => {});
-    } else {
-        document.getElementById('loader').style.display = 'none';
-    }
-</script>
-
-</body>
-</html>
+/* Numéro WhatsApp qui reçoit les demandes : indicatif 225 + numéro, sans + ni espaces */
+var WA_NUMBER="2250704815924";
+/* Numéros où les clients envoient l'argent, par réseau */
+var PAY={"Wave":"01 02 86 19 91","Orange Money":"07 04 81 59 24","Moov Money":"01 02 86 19 91"};
+/* Bouquets : nom, prix par mois en FCFA */
+var BQ=[["Access",5000],["Évasion",10000],["Access+",15000],["Tout Canal",25000]];
+/* Options : nom, prix par mois, règle spéciale */
+var OPS=[["Charme",6000],["Promo du moment",2000,"promo"],["Netflix Basic (1 écran)",3000],["Netflix Standard (2 écrans)",3000],["Netflix Premium (4 écrans)",3000],["Super Sport",null,"sport"]];
+/* Prix d'une option selon le bouquet : nombre = prix, null = à confirmer, "x" = non valable */
+function opP(i){var o=OPS[i],b=bqSel()[0];if(o[2]==="promo"&&b==="Tout Canal")return "x";if(o[2]==="sport")return b==="Évasion"?5000:b==="Access+"?2000:"x";return o[1]}
+var $=function(i){return document.getElementById(i)};
+function fcfa(n){return n.toLocaleString("fr-FR")+" FCFA"}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+$("bq").innerHTML=BQ.map(function(b,i){return '<label class="opt"><input type="radio" name="bq" value="'+i+'"'+(i===0?" checked":"")+'><span><b>'+b[0]+'</b><small>'+fcfa(b[1])+' / mois</small></span></label>'}).join("");
+$("ops").innerHTML=OPS.map(function(o,i){return '<label class="opt"><input type="checkbox" name="op" value="'+i+'"><span><b>'+esc(o[0])+'</b><small></small></span></label>'}).join("");
+var mo="";for(var m=1;m<=12;m++)mo+='<option value="'+m+'">'+m+' mois</option>';$("mois").innerHTML=mo;
+$("net").innerHTML=Object.keys(PAY).map(function(n){return '<option>'+n+'</option>'}).join("");
+function bqSel(){var r=document.querySelector('input[name=bq]:checked');return BQ[r?r.value:0]}
+function opsSel(){return Array.prototype.filter.call(document.querySelectorAll('input[name=op]:checked'),function(c){return opP(c.value)!=="x"}).map(function(c){return [OPS[c.value][0],opP(c.value)]})}
+function total(){var s=bqSel()[1];opsSel().forEach(function(o){s+=o[1]||0});return s*parseInt($("mois").value,10)}
+function validate(){var d=$("dec").value.replace(/\D/g,"");
+if(d.length<8)return "Entrez votre numéro de décodeur ou d’abonné (au moins 8 chiffres).";
+if(!$("nom").value.trim())return "Entrez votre nom.";
+if($("tel").value.replace(/\D/g,"").length
